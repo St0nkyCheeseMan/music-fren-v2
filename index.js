@@ -1,5 +1,5 @@
-import * as Discord from "discord.js";
-import * as Config from "./config";
+const Discord = require("discord.js");
+const Config = require("./config");
 var db = require('quick.db');
 const myIntents = new Discord.Intents();
 myIntents.add(Discord.Intents.FLAGS.GUILD_MESSAGES);
