@@ -1,0 +1,15 @@
+{
+  "name": "music-fren-v2",
+  "version": "1.0.0",
+  "description": "We try again",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "music-fren-v2"
+  },
+  "author": "Eric Zou",
+  "license": "ISC"
+}
