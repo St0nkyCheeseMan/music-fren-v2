@@ -1,6 +1,5 @@
 const Discord = require("discord.js");
 const Config = require("./config");
-var db = require('quick.db');
 const myIntents = new Discord.Intents();
 myIntents.add(Discord.Intents.FLAGS.GUILD_MESSAGES);
 const Bot = new Discord.Client({intents: myIntents});
@@ -27,6 +26,5 @@ Bot.once("ready", async () => {
         })
     })
     })
-
 
 Bot.login(Config.config.token); //logs in using token in config.config (not accessible to you)
