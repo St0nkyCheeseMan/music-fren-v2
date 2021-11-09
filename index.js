@@ -46,6 +46,11 @@ Bot.once("ready", async () => {
         }
     }
     //console.log(ytlinks);
+    vidIds = []
+    for(var i = 0; i < ytlinks.length; i++){
+        vidIds.push(ytlinks[i].slice(-11));
+    }
+    console.log(vidIds);
 })
 
 Bot.login(Config.config.token); //logs in using token in config.config (not accessible to you)
