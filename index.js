@@ -3,11 +3,16 @@ const Config = require("./config");
 const myIntents = new Discord.Intents();
 myIntents.add(Discord.Intents.FLAGS.GUILD_MESSAGES);
 const Bot = new Discord.Client({intents: myIntents});
+const {google} = require('googleapis');
+const path = require('path');
+const {authenticate} = require('@google-cloud/local-auth');
+const youtube = google.youtube('v3');
 
 
 const fs = require('fs');
 
 async function fetchAll(channel){
+    //let finalID = 
     let collection = new Discord.Collection();
     let options = {};
     //channel.send("Starting compilation process");
@@ -27,9 +32,14 @@ async function fetchAll(channel){
 Bot.once("ready", async () => {
     console.log("This bot is online!"); //standard protocol when starting up the bot
     Bot.user.setPresence({ activities: [{ name: 'music videos', type:'WATCHING' }], status: 'online' });
-    Bot.user.setUsername("Playlist Plus");
-    Bot.user.setAvatar("download.png");
-    channel = await Bot.channels.fetch("575857030770851847");
+    const auth = await authenticate({
+      keyfilePath: path.join(__dirname, 'auth.json'),
+      scopes: ['https://www.googleapis.com/auth/youtube'],
+    });
+    google.options({auth});
+  //  Bot.user.setUsername("Playlist Plus");
+  //  Bot.user.setAvatar("download.png");
+    /*channel = await Bot.channels.fetch("575857030770851847");
     messages = await fetchAll(channel);
     linkmsgs = messages.filter(msg => msg.content.includes('youtu'));
     linkmsgs = linkmsgs.filter(msg => msg.content.includes('https://'));
@@ -39,13 +49,63 @@ Bot.once("ready", async () => {
     for(var i = 0; i < rawmsgs.length; i++){
         matches = await rawmsgs[i].match(re);
         try{
-            ytlinks.push(matches[0]);
+            ytlinks.push(matches[0].slice(-11));
         }
         catch(error){
             //pass
         }
+    }  */
+
+    console.log("yo im here now")
+    let A = fs.readFileSync('./links.txt').toString().split((/\r?\n/));
+    let diff = A//ytlinks.filter(x => !A.includes(x))
+
+    // Returns a Promise that resolves after "ms" Milliseconds
+    const timer = ms => new Promise(res => setTimeout(res, ms))
+
+    async function load () { // We need to wrap the loop into an async function for this to work
+      for (var i = 0; i < diff.length; i++) {
+        addSong(diff[i]);
+        await timer(1000); // then the created Promise can be awaited
+        // this shit does not work... FUCK
+      }
     }
-    //console.log(ytlinks);
+
+    load();
+
+    /*fs.appendFile('links.txt', diff.join('\n'), err => {
+      if (err) {
+        console.error(err)
+        return
+      }
+      //file written successfully
+    })*/
+
 })
 
 Bot.login(Config.config.token); //logs in using token in config.config (not accessible to you)
+
+// a very simple example of getting data from a playlist
+async function addSong(id) {
+  youtube.playlistItems.insert({
+    part: 'id,snippet',
+    resource: {
+        snippet: {
+            playlistId:"PLpi_S6FB4f2im56r1qXYzkhNLkP7sGEdm",
+            resourceId:{
+                videoId:id,
+                kind:"youtube#video"
+            }
+        }
+    }
+}, function (err, data, response) {
+    if (err) 
+        console.log(err);
+   /* else if (data) {
+        lien.end(data);
+   */
+    if (response) {
+        console.log('Status code: ' + response.statusCode);
+    }
+});
+}
