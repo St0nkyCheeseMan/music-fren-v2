@@ -39,7 +39,7 @@ Bot.once("ready", async () => {
     google.options({auth});
   //  Bot.user.setUsername("Playlist Plus");
   //  Bot.user.setAvatar("download.png");
-    /*channel = await Bot.channels.fetch("575857030770851847");
+    channel = await Bot.channels.fetch("575857030770851847");
     messages = await fetchAll(channel);
     linkmsgs = messages.filter(msg => msg.content.includes('youtu'));
     linkmsgs = linkmsgs.filter(msg => msg.content.includes('https://'));
@@ -54,11 +54,11 @@ Bot.once("ready", async () => {
         catch(error){
             //pass
         }
-    }  */
+    } 
 
     console.log("yo im here now")
     let A = fs.readFileSync('./links.txt').toString().split((/\r?\n/));
-    let diff = A//ytlinks.filter(x => !A.includes(x))
+    let diff = ytlinks.filter(x => !A.includes(x))
 
     // Returns a Promise that resolves after "ms" Milliseconds
     const timer = ms => new Promise(res => setTimeout(res, ms))
@@ -66,20 +66,19 @@ Bot.once("ready", async () => {
     async function load () { // We need to wrap the loop into an async function for this to work
       for (var i = 0; i < diff.length; i++) {
         addSong(diff[i]);
-        await timer(1000); // then the created Promise can be awaited
-        // this shit does not work... FUCK
+        await timer(2000); // then the created Promise can be awaited
       }
     }
 
     load();
 
-    /*fs.appendFile('links.txt', diff.join('\n'), err => {
+    fs.appendFile('links.txt', diff.join('\n'), err => {
       if (err) {
         console.error(err)
         return
       }
       //file written successfully
-    })*/
+    })
 
 })
 
