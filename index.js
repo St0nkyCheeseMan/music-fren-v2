@@ -12,20 +12,28 @@ const youtube = google.youtube('v3');
 const fs = require('fs');
 
 async function fetchAll(channel){
-    //let finalID = 
     let collection = new Discord.Collection();
     let options = {};
+    const finId = parseInt(fs.readFileSync("finid.txt").toString());
     //channel.send("Starting compilation process");
     let lastId = await channel.messages.fetch({limit : 1}).id;
     while(true){
         options.before = lastId;
         let messages = await channel.messages.fetch(options);
         collection = collection.concat(messages);
-        if(!messages.last()){
+        if(!messages.last() || parseInt(lastId) < finId){
             break;
         }
         lastId = messages.last().id;
     }
+    channel.messages.fetch({limit:1}).then(msg => {
+      fs.writeFile('finid.txt', msg.at(0).id, err => {
+        if (err) {
+          console.error(err)
+          return
+        }
+      })
+    })
     return collection;
 }
 
@@ -55,7 +63,7 @@ Bot.once("ready", async () => {
             //pass
         }
     } 
-
+    console.log(ytlinks)
     console.log("yo im here now")
     let A = fs.readFileSync('./links.txt').toString().split((/\r?\n/));
     let diff = ytlinks.filter(x => !A.includes(x))
