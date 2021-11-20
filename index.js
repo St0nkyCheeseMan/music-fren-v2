@@ -83,7 +83,7 @@ Bot.once("ready", async () => {
 
     load();
 
-    fs.appendFile('links.txt', diff.join('\n'), err => {
+    fs.appendFile('links.txt', "\n" + diff.join('\n'), err => {
       if (err) {
         console.error(err)
         return
