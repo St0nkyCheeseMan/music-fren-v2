@@ -17,9 +17,11 @@ async function fetchAll(channel){
     const finId = parseInt(fs.readFileSync("finid.txt").toString());
     //channel.send("Starting compilation process");
     let lastId = await channel.messages.fetch({limit : 1}).id;
+    var numOfNewMessages = 0;
     while(true){
         options.before = lastId;
         let messages = await channel.messages.fetch(options);
+        numOfNewMessages += messages.size;
         collection = collection.concat(messages);
         if(!messages.last() || parseInt(lastId) < finId){
             break;
@@ -34,6 +36,7 @@ async function fetchAll(channel){
         }
       })
     })
+    console.log(numOfNewMessages)
     return collection;
 }
 
@@ -64,7 +67,7 @@ Bot.once("ready", async () => {
         }
     } 
     console.log(ytlinks)
-    console.log("yo im here now")
+    //console.log("yo im here now")
     let A = fs.readFileSync('./links.txt').toString().split((/\r?\n/));
     let diff = ytlinks.filter(x => !A.includes(x))
 
